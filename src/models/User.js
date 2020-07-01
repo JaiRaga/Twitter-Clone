@@ -11,6 +11,10 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
+    username: {
+      type: String,
+      required: true
+    },
     email: {
       type: String,
       required: true,
@@ -34,8 +38,39 @@ const userSchema = new Schema(
         }
       }
     },
-    followers: [],
-    following: [],
+    followers: [
+      {
+        username: {
+          type: String,
+          required: true
+        },
+        handle: {
+          type: String,
+          required: true
+        },
+        caption: {
+          type: String
+        }
+      }
+    ],
+    following: [
+      {
+        username: {
+          type: String,
+          required: true
+        },
+        handle: {
+          type: String,
+          required: true
+        },
+        caption: {
+          type: String
+        }
+      }
+    ],
+    caption: {
+      type: String
+    },
     tokens: [
       {
         token: {
@@ -56,7 +91,7 @@ userSchema.virtual("tweets", {
   foreignField: "owner"
 });
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
 
@@ -66,7 +101,7 @@ userSchema.methods.toJSON = function() {
   return userObject;
 };
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, tokenSecret, {
     expiresIn: "7 days"
@@ -81,19 +116,21 @@ userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) {
+    console.log("FIRST");
     throw new Error("Unable to login");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
+    console.log("SECOND");
     throw new Error("Unable to login");
   }
 
   return user;
 };
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   const user = this;
 
   if (user.isModified("password")) {
@@ -103,7 +140,7 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-userSchema.pre("remove", async function(next) {
+userSchema.pre("remove", async function (next) {
   const user = this;
   await Tweet.deleteMany({ owner: user._id });
   next();
