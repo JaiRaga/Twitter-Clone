@@ -14,7 +14,50 @@ const tweetSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User"
-    }
+    },
+    likes: [
+      {
+        owner: {
+          type: Schema.Types.ObjectId,
+          required: true
+        }
+      }
+    ],
+    retweets: [
+      {
+        owner: {
+          type: Schema.Types.ObjectId,
+          required: true
+        }
+      }
+    ],
+    comments: [
+      {
+        owner: {
+          type: Schema.Types.ObjectId,
+          required: true
+        },
+        username: {
+          type: String,
+          required: true
+        },
+        handle: {
+          type: String,
+          required: true
+        },
+        text: {
+          type: String,
+          required: true
+        },
+        avatar: {
+          type: String
+        },
+        date: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
   {
     timestamps: true
