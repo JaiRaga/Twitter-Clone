@@ -11,6 +11,9 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
+    avatar: {
+      type: String
+    },
     username: {
       type: String,
       required: true
@@ -40,31 +43,17 @@ const userSchema = new Schema(
     },
     followers: [
       {
-        username: {
-          type: String,
+        userId: {
+          type: Schema.Types.ObjectId,
           required: true
-        },
-        handle: {
-          type: String,
-          required: true
-        },
-        caption: {
-          type: String
         }
       }
     ],
     following: [
       {
-        username: {
-          type: String,
+        userId: {
+          type: Schema.Types.ObjectId,
           required: true
-        },
-        handle: {
-          type: String,
-          required: true
-        },
-        caption: {
-          type: String
         }
       }
     ],
@@ -90,6 +79,12 @@ userSchema.virtual("tweets", {
   localField: "_id",
   foreignField: "owner"
 });
+
+// userSchema.virtual("comments", {
+//   ref: "Tweet",
+//   localField: "_id",
+//   foreignField: "owner"
+// });
 
 userSchema.methods.toJSON = function () {
   const user = this;
