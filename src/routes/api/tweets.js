@@ -22,11 +22,54 @@ router.post("/tweet", auth, async (req, res) => {
 // get all tweets
 router.get("/tweets", auth, async (req, res) => {
   try {
-    const tweets = await Tweet.find().sort({ createdAt: -1 }).limit(6);
+    let tweets = await Tweet.find().sort({ createdAt: -1 }).limit(2);
     if (!tweets) return res.status(404).send("No Tweets Yet!");
+    let len = tweets.length;
 
-    res.send(tweets);
+    // setTimeout(async () => {
+    //   tweets = tweets.map(async (tweet) => {
+    //     await tweet.populate("owner").execPopulate();
+    //     await tweet.save();
+    //     console.log("++++++++++++++++++++++");
+    //     console.log(tweet);
+    //     return tweet;
+    //   });
+    // }, 300);
+
+    Promise.all(
+      tweets.map(async (tweet) => {
+        await tweet.populate("owner").execPopulate();
+        await tweet.save();
+        return tweet;
+      })
+    )
+      .then((result) => res.send(result))
+      .catch((err) => console.log(err));
+
+    // while (true) {
+    //   tweets = tweets.map(async (tweet) => {
+    //     await tweet.populate("owner").execPopulate();
+    //     await tweet.save();
+    //     console.log("++++++++++++++++++++++");
+    //     console.log(tweet);
+    //     return tweet;
+    //   });
+    //   if (tweets.length === len) break;
+    // }
+
+    // tweets = tweets.map(async (tweet) => {
+    //   await tweet.populate("owner").execPopulate();
+    //   await tweet.save();
+    //   console.log("++++++++++++++++++++++");
+    //   console.log(tweet);
+    //   return tweet;
+    // });
+
+    // console.log("*******************************");
+    // console.log(tweets);
+    // res.send(tweets);
   } catch (e) {
+    console.log(e);
     res.status(500).send("Server Error!");
   }
 });
