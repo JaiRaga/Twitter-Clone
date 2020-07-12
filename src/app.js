@@ -8,8 +8,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(usersRouter);
-app.use(tweetsRouter);
+app.use("/api", usersRouter);
+app.use("/api", tweetsRouter);
 
 const port = process.env.PORT || 9000;
 
