@@ -22,7 +22,7 @@ router.post("/tweet", auth, async (req, res) => {
 // get all tweets
 router.get("/tweets", auth, async (req, res) => {
   try {
-    let tweets = await Tweet.find().sort({ createdAt: -1 }).limit(2);
+    let tweets = await Tweet.find().sort({ createdAt: -1 }).limit(8);
     if (!tweets) return res.status(404).send("No Tweets Yet!");
     let len = tweets.length;
 
@@ -119,7 +119,21 @@ router.get("/tweet/:id", auth, async (req, res) => {
   }
 });
 
-// Delete Tweet
+// Delete a Tweet
+router.delete("/tweet/:id", auth, async (req, res) => {
+  try {
+    const tweet = await Tweet.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id
+    });
+
+    if (!tweet) return res.status(404).send("Tweet doesn't exists!");
+
+    res.send(tweet);
+  } catch (err) {
+    res.status(500).send("Error! Couldn't perform the task!");
+  }
+});
 
 // Like a Tweet
 router.patch("/like/:tweetId", auth, async (req, res) => {
@@ -139,7 +153,7 @@ router.patch("/like/:tweetId", auth, async (req, res) => {
 
     tweet.likes.push({ owner: req.user._id });
     await tweet.save();
-    res.send(tweet);
+    res.send(tweet.likes);
   } catch (err) {
     res.status(500).send("Error! Couldn't perform the task!");
   }
@@ -158,7 +172,7 @@ router.patch("/unlike/:id", auth, async (req, res) => {
     );
 
     await tweet.save();
-    res.send(tweet);
+    res.send(tweet.likes);
   } catch (err) {
     res.status(500).send("Error! Couldn't Perform the task!");
   }
@@ -182,7 +196,7 @@ router.patch("/retweet/:id", auth, async (req, res) => {
 
     tweet.retweets.push({ owner: req.user._id });
     await tweet.save();
-    res.send(tweet);
+    res.send(tweet.retweets);
   } catch (err) {
     res.status(500).send("Error! Couldn't Perform the task!");
   }
@@ -200,63 +214,63 @@ router.patch("/detweet/:id", auth, async (req, res) => {
       (retweet) => retweet.owner.toString() !== req.user._id.toString()
     );
     await tweet.save();
-    res.send(tweet);
+    res.send(tweet.retweets);
   } catch (err) {
     res.status(500).send("Error! Couldn't perform the action");
   }
 });
 
 // Comment on a Tweet
-router.post("/comment/:id", auth, async (req, res) => {
-  try {
-    const tweet = await Tweet.findOne({ _id: req.params.id });
-    if (!tweet) {
-      return res.status(404).send("Tweet not found");
-    }
+// router.post("/comment/:id", auth, async (req, res) => {
+//   try {
+//     const tweet = await Tweet.findOne({ _id: req.params.id });
+//     if (!tweet) {
+//       return res.status(404).send("Tweet not found");
+//     }
 
-    const { username, handle, avatar } = req.user;
-    const owner = req.user._id,
-      text = req.body.text;
+//     const { username, handle, avatar } = req.user;
+//     const owner = req.user._id,
+//       text = req.body.text;
 
-    tweet.comments.push({ owner, username, handle, text, avatar });
-    await tweet.save();
-    res.send(tweet.comments);
-  } catch (err) {
-    res.status(500).send("Error! Couldn't perform the action");
-  }
-});
+//     tweet.comments.push({ owner, username, handle, text, avatar });
+//     await tweet.save();
+//     res.send(tweet.comments);
+//   } catch (err) {
+//     res.status(500).send("Error! Couldn't perform the action");
+//   }
+// });
 
-// Delete a comment
-router.delete("/comment/:tweetId/:commentId", auth, async (req, res) => {
-  try {
-    console.log(1);
-    const tweet = await Tweet.findOne({ _id: req.params.tweetId });
-    if (!tweet) {
-      return res.status(404).send("Tweet not found");
-    }
-    console.log(2);
-    const comment = tweet.comments.find((comment) => {
-      console.log(comment._id);
-      return comment._id.toString() === req.params.commentId;
-    });
-    console.log(3, comment);
-    if (!comment) return res.status(404).send("Comment does not exists!");
-    console.log(4);
-    if (comment.owner.toString() !== req.user._id.toString())
-      return res.status(401).send("User not Authorized");
-    console.log(5);
-    const removeIndex = tweet.comments
-      .map((comment) => comment._id.toString())
-      .indexOf(req.params.commentId);
-    console.log(6);
-    tweet.comments.splice(removeIndex, 1);
-    console.log(7);
-    await tweet.save();
-    res.send(tweet.comments);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Error! Couldn't perform the action");
-  }
-});
+// // Delete a comment
+// router.delete("/comment/:tweetId/:commentId", auth, async (req, res) => {
+//   try {
+//     console.log(1);
+//     const tweet = await Tweet.findOne({ _id: req.params.tweetId });
+//     if (!tweet) {
+//       return res.status(404).send("Tweet not found");
+//     }
+//     console.log(2);
+//     const comment = tweet.comments.find((comment) => {
+//       console.log(comment._id);
+//       return comment._id.toString() === req.params.commentId;
+//     });
+//     console.log(3, comment);
+//     if (!comment) return res.status(404).send("Comment does not exists!");
+//     console.log(4);
+//     if (comment.owner.toString() !== req.user._id.toString())
+//       return res.status(401).send("User not Authorized");
+//     console.log(5);
+//     const removeIndex = tweet.comments
+//       .map((comment) => comment._id.toString())
+//       .indexOf(req.params.commentId);
+//     console.log(6);
+//     tweet.comments.splice(removeIndex, 1);
+//     console.log(7);
+//     await tweet.save();
+//     res.send(tweet.comments);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send("Error! Couldn't perform the action");
+//   }
+// });
 
 module.exports = router;
