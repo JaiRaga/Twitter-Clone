@@ -1,2 +1,2 @@
 # Twitter-Clone
-A Twitter Clone build using the MERN stack
+Backend of twitter clone build using the MERN stack.
