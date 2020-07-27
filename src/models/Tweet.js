@@ -31,33 +31,7 @@ const tweetSchema = new Schema(
         }
       }
     ],
-    comments: [
-      {
-        owner: {
-          type: Schema.Types.ObjectId,
-          required: true
-        },
-        username: {
-          type: String,
-          required: true
-        },
-        handle: {
-          type: String,
-          required: true
-        },
-        text: {
-          type: String,
-          required: true
-        },
-        avatar: {
-          type: String
-        },
-        date: {
-          type: Date,
-          default: Date.now
-        }
-      }
-    ]
+    comments: []
   },
   {
     timestamps: true
