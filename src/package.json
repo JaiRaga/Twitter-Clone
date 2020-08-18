@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js --prefix src",
+    "start": "node app.js",
     "client": "npm run start --prefix client",
     "server": "nodemon src/app.js",
     "dev:debug": "nodemon --inspect src/app.js",
