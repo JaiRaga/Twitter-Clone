@@ -31,7 +31,21 @@ const tweetSchema = new Schema(
         }
       }
     ],
-    comments: []
+    comments: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User"
+        },
+        text: {
+          type: String
+        },
+        date: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
   {
     timestamps: true
