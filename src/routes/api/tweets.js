@@ -61,7 +61,7 @@ router.get("/tweets/me", auth, async (req, res) => {
 
     let tweets = req.user.tweets;
 
-    console.log(tweets);
+    // console.log(tweets);
 
     Promise.all(
       tweets.map(async (tweet) => {
