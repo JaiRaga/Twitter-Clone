@@ -75,7 +75,7 @@ const Profile = () => {
               <div className={classes.root}>
                 <Avatar
                   alt={user.username}
-                  src={profilePic}
+                  src={user.avatar}
                   className={classes.large}></Avatar>
               </div>
             </Grid>
