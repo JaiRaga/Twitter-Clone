@@ -48,7 +48,9 @@ const CommentItem = ({ comment }) => {
     <Paper elevation={3} className={classes.spacing}>
       <Grid container item alignItems='center' className={classes.root}>
         <Grid item className={classes.items}>
-          <Avatar className={classes.purple}>R</Avatar>
+          <Avatar className={classes.purple}>
+            {username.split("")[0].toUpperCase()}
+          </Avatar>
         </Grid>
         <Grid item className={classes.items}>
           <Grid container item direction='column'>
