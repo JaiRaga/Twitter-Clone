@@ -14,7 +14,7 @@ const initialState = {
   token: localStorage.getItem("token"),
   user: null,
   isAuthenticated: null,
-  loading: false
+  loading: true
 };
 
 export default (state = initialState, action) => {
@@ -31,7 +31,9 @@ export default (state = initialState, action) => {
 
     case UPDATE_PROFILE:
       return {
-        ...state
+        ...state,
+        user: payload,
+        loading: false
       };
 
     case REGISTER_SUCCESS:
