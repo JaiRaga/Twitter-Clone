@@ -70,7 +70,7 @@ const SideProfile = () => {
             <div className={classes.root}>
               <Avatar
                 alt={user.username}
-                src={profilePic}
+                src={user !== null ? user.avatar : null}
                 className={classes.small}></Avatar>
             </div>
           </Grid>
