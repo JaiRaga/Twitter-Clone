@@ -7,8 +7,7 @@ import {
   Button,
   Paper
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import profilePic from "../../img/raga.jpg";
+import { useDispatch, useSelector } from "react-redux";
 import PostTweetButton from "./PostTweetButton";
 import { postTweet } from "../../Redux/actions/tweet";
 
@@ -37,6 +36,7 @@ const Tweet = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tweet, setTweet] = useState("");
+  const user = useSelector((state) => state.auth.user);
 
   const onChange = (e) => {
     setTweet(e.target.value);
@@ -54,7 +54,11 @@ const Tweet = () => {
       <Paper elevation={3} className={classes.margin}>
         <Grid container item>
           <Grid item className={classes.root}>
-            <Avatar alt='username' src={profilePic} className={classes.large} />
+            <Avatar
+              alt='username'
+              src={user !== null ? user.avatar : null}
+              className={classes.large}
+            />
             <Grid container item spacing={8}>
               <Grid item className={classes.textField}>
                 <form>
