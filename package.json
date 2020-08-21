@@ -1,7 +1,7 @@
 {
   "name": "mern-twitter-clone",
   "version": "1.0.0",
-  "description": "",
+  "description": "A micro blogging app like twitter",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
