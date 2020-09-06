@@ -65,12 +65,19 @@ router.get("/tweets/me", auth, async (req, res) => {
 
     Promise.all(
       tweets.map(async (tweet) => {
-        await tweet.populate("owner").populate("comments.user").execPopulate();
+        await tweet
+          .populate("owner")
+          .populate("comments.user")
+          .populate("retweets.owner")
+          .execPopulate();
         await tweet.save();
         return tweet;
       })
     )
-      .then((result) => res.send(result))
+      .then((result) => {
+        console.log(result);
+        res.send(result);
+      })
       .catch((err) => console.log(err));
 
     // res.send(req.user.tweets);
@@ -169,6 +176,7 @@ router.patch("/unlike/:id", auth, async (req, res) => {
 router.patch("/retweet/:id", auth, async (req, res) => {
   try {
     const tweet = await Tweet.findOne({ _id: req.params.id });
+    console.log(req.user);
     if (!tweet) {
       return res.status(404).send("Tweet Not Found");
     }
