@@ -115,10 +115,11 @@ userSchema.methods.updateUser = async function (
 ) {
   let user = this;
 
-  user.username = username;
-  user.handle = handle;
-  user.email = email;
-  user.avatar = avatar;
+  username ? (user.username = username) : null;
+  handle ? (user.handle = handle) : null;
+  email ? (user.email = email) : null;
+  avatar ? (user.avatar = avatar) : null;
+
   console.log("Avatar....", user.avatar, avatar, username, email, handle);
   await user.save();
   console.log("Avatar....", user.avatar, avatar);
