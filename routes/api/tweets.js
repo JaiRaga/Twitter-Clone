@@ -176,10 +176,16 @@ router.patch("/unlike/:id", auth, async (req, res) => {
 router.patch("/retweet/:id", auth, async (req, res) => {
   try {
     const tweet = await Tweet.findOne({ _id: req.params.id });
-    console.log(req.user);
     if (!tweet) {
       return res.status(404).send("Tweet Not Found");
     }
+
+    // Populate tweets to current user
+    await req.user.populate("tweets").execPopulate();
+    let tweets = req.user.tweets;
+    console.log(tweet);
+    tweets.unshift(tweet);
+    console.log("Tweets", tweets);
 
     if (
       tweet.retweets.filter(
