@@ -122,7 +122,7 @@ const TweetItem = ({ tweet }) => {
 
   const share = (id) => {
     let retweets = tweet.retweets.map((retweet) => retweet._id === id);
-    console.log(retweets);
+    // console.log(retweets);
     if (retweets.length === 0 && !retweet) {
       setRetweet(true);
       dispatch(reTweet(id));
@@ -203,7 +203,11 @@ const TweetItem = ({ tweet }) => {
                       <Typography variant='button' className={classes.like}>
                         {tweet.likes.length}
                       </Typography>
-                    ) : null}
+                    ) : (
+                      <Typography variant='button' className={classes.like}>
+                        0
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item>
                     <IconButton
@@ -216,14 +220,22 @@ const TweetItem = ({ tweet }) => {
                       <Typography variant='button' className={classes.retweet}>
                         {tweet.retweets.length}
                       </Typography>
-                    ) : null}
+                    ) : (
+                      <Typography variant='button' className={classes.retweet}>
+                        0
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item>
                     {tweet.retweets.length > 0 ? (
                       <Typography variant='button' className={classes.comment}>
                         {comments.length}
                       </Typography>
-                    ) : null}
+                    ) : (
+                      <Typography variant='button' className={classes.comment}>
+                        0
+                      </Typography>
+                    )}
                     <IconButton
                       aria-label='comment'
                       className={classes.comment}
