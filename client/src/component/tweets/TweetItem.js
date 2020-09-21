@@ -99,7 +99,6 @@ const TweetItem = ({ tweet }) => {
   const classes = useStyles();
   const loading = useSelector((state) => state.tweet.loading);
   const authUser = useSelector((state) => state.auth.user);
-  const { username, handle } = authUser;
   const comments = tweet.comments;
   const user = tweet.owner;
 
