@@ -65,7 +65,7 @@ export const getRetweetsByMe = () => async (dispatch) => {
     const res = await axios.get("/api/retweets/me");
     dispatch({
       type: GET_MY_RETWEETS,
-      payload: res.data
+      payload: res.data.reverse()
     });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
@@ -78,7 +78,7 @@ export const getLikesByMe = () => async (dispatch) => {
     const res = await axios.get("/api/likes/me");
     dispatch({
       type: GET_MY_LIKES,
-      payload: res.data
+      payload: res.data.reverse()
     });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
