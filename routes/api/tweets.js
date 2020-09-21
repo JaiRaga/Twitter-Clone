@@ -96,23 +96,32 @@ router.get("/retweets/me", auth, async (req, res) => {
 
     tweets.map((tweet) => {
       if (tweet.retweets.length > 0) {
-        // console.log("tweets", tweet);
-        tweet.retweets.forEach(async (retweet) => {
-          // console.log(retweet.owner.toString() === req.user._id.toString());
-
+        tweet.retweets.forEach((retweet) => {
           if (retweet.owner.toString() === req.user._id.toString()) {
-            console.log(tweet);
-            // await tweet.populate("owner").execPopulate();
-            // await tweet.save();
-            console.log(tweet);
             retweets.push(tweet);
           }
-
-          // console.log(retweets);
         });
       }
     });
-    res.send(retweets);
+
+    Promise.all(
+      retweets.map(async (tweet) => {
+        await tweet
+          .populate("owner")
+          .populate("comments.user")
+          // .populate("retweets.owner")
+          .execPopulate();
+        await tweet.save();
+        return tweet;
+      })
+    )
+      .then((result) => {
+        console.log(result);
+        res.send(result);
+      })
+      .catch((err) => console.log(err));
+
+    // res.send(retweets);
   } catch (err) {
     res.status(500).send();
   }
@@ -127,15 +136,10 @@ router.get("/likes/me", auth, async (req, res) => {
 
     tweets.map((tweet) => {
       if (tweet.likes.length > 0) {
-        // console.log("tweets", tweet);
         tweet.likes.forEach((like) => {
-          // console.log(like.owner.toString() === req.user._id.toString());
-
           like.owner.toString() === req.user._id.toString()
             ? likes.push(tweet)
             : null;
-
-          // console.log(likes);
         });
       }
     });
