@@ -1,7 +1,5 @@
 import {
   GET_TWEETS,
-  GET_TWEETS_BY_ME,
-  GET_TWEETS_BY_USER,
   CLEAR_TWEET,
   CLEAR_TWEETS,
   POST_TWEET,
@@ -9,12 +7,17 @@ import {
   UPDATE_LIKES,
   RETWEET,
   UPDATE_COMMENTS,
-  POST_COMMENT
+  POST_COMMENT,
+  GET_MY_TWEETS,
+  GET_MY_RETWEETS,
+  GET_MY_LIKES
 } from "../actions/types";
 
 const initialState = {
   tweet: null,
   tweets: [],
+  retweets: [],
+  likes: [],
   loading: true,
   error: {}
 };
@@ -23,9 +26,30 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case GET_TWEETS:
+    case GET_MY_TWEETS:
       return {
         ...state,
         tweets: payload,
+        loading: false
+      };
+
+    // case GET_MY_TWEETS:
+    //   return {
+    //     ...state,
+    //     userTweets: [...payload],
+    //     loading: false
+    //   };
+    case GET_MY_RETWEETS:
+      return {
+        ...state,
+        retweets: payload,
+        loading: false
+      };
+
+    case GET_MY_LIKES:
+      return {
+        ...state,
+        likes: payload,
         loading: false
       };
 
