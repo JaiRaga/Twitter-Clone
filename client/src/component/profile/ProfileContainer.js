@@ -3,8 +3,14 @@ import { Grid } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { CircleLoader } from "react-spinners";
 import Profile from "./Profile";
-import { getTweetsByMe, clearTweets } from "../../Redux/actions/tweet";
+import {
+  getTweetsByMe,
+  clearTweets,
+  getRetweetsByMe,
+  getLikesByMe
+} from "../../Redux/actions/tweet";
 import Tweets from "../tweets/Tweets";
+import ToggleTweets from "../tweets/ToggleTweets";
 
 const style = (theme) => ({
   Grid: {
@@ -16,6 +22,8 @@ const ProfileContainer = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTweetsByMe());
+    dispatch(getRetweetsByMe());
+    dispatch(getLikesByMe());
 
     return () => {
       dispatch(clearTweets());
@@ -44,11 +52,17 @@ const ProfileContainer = () => {
         alignItems='center'
         spacing={4}>
         <Profile />
+
         <Grid container item justify='center'>
           {loading || !tweets ? (
             <CircleLoader loading color='#1976d2' />
           ) : (
-            <Tweets tweets={tweets} />
+            <Fragment>
+              <Grid container item justify='center' alignItems='center'>
+                <ToggleTweets />
+              </Grid>
+              {/* <Tweets tweets={tweets} /> */}
+            </Fragment>
           )}
         </Grid>
       </Grid>
