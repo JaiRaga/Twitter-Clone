@@ -143,7 +143,23 @@ router.get("/likes/me", auth, async (req, res) => {
         });
       }
     });
-    res.send(likes);
+    Promise.all(
+      likes.map(async (tweet) => {
+        await tweet
+          .populate("owner")
+          .populate("comments.user")
+          // .populate("retweets.owner")
+          .execPopulate();
+        await tweet.save();
+        return tweet;
+      })
+    )
+      .then((result) => {
+        console.log(result);
+        res.send(result);
+      })
+      .catch((err) => console.log(err));
+    // res.send(likes);
   } catch (err) {
     res.status(500).send();
   }
