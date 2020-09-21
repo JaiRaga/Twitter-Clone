@@ -2,7 +2,9 @@ import axios from "axios";
 import {
   GET_TWEETS,
   POST_TWEET,
-  GET_TWEETS_BY_ME,
+  GET_MY_TWEETS,
+  GET_MY_RETWEETS,
+  GET_MY_LIKES,
   GET_TWEETS_BY_USER,
   TWEET_ERROR,
   AUTH_ERROR,
@@ -47,9 +49,35 @@ export const clearTweets = () => async (dispatch) => {
 export const getTweetsByMe = () => async (dispatch) => {
   try {
     const res = await axios.get("/api/tweets/me");
-    console.log("Me");
+    console.log("Me", res);
     dispatch({
-      type: GET_TWEETS,
+      type: GET_MY_TWEETS,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({ type: AUTH_ERROR });
+  }
+};
+
+// Get Retweets by me
+export const getRetweetsByMe = () => async (dispatch) => {
+  try {
+    const res = await axios.get("/api/retweets/me");
+    dispatch({
+      type: GET_MY_RETWEETS,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({ type: AUTH_ERROR });
+  }
+};
+
+// Get likes by me
+export const getLikesByMe = () => async (dispatch) => {
+  try {
+    const res = await axios.get("/api/likes/me");
+    dispatch({
+      type: GET_MY_LIKES,
       payload: res.data
     });
   } catch (err) {
