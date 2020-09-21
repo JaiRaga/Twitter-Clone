@@ -49,6 +49,7 @@ router.get("/tweets", async (req, res) => {
 // find tweets by me
 router.get("/tweets/me", auth, async (req, res) => {
   try {
+    // Get all tweets
     await req.user
       .populate({
         path: "tweets",
@@ -75,13 +76,71 @@ router.get("/tweets/me", auth, async (req, res) => {
       })
     )
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.send(result);
       })
       .catch((err) => console.log(err));
 
     // res.send(req.user.tweets);
   } catch (e) {
+    res.status(500).send();
+  }
+});
+
+// find retwets by me
+router.get("/retweets/me", auth, async (req, res) => {
+  try {
+    const tweets = await Tweet.find();
+    let retweets = [];
+    if (!tweets) return res.status(404).send("No Tweets Made!");
+
+    tweets.map((tweet) => {
+      if (tweet.retweets.length > 0) {
+        // console.log("tweets", tweet);
+        tweet.retweets.forEach(async (retweet) => {
+          // console.log(retweet.owner.toString() === req.user._id.toString());
+
+          if (retweet.owner.toString() === req.user._id.toString()) {
+            console.log(tweet);
+            // await tweet.populate("owner").execPopulate();
+            // await tweet.save();
+            console.log(tweet);
+            retweets.push(tweet);
+          }
+
+          // console.log(retweets);
+        });
+      }
+    });
+    res.send(retweets);
+  } catch (err) {
+    res.status(500).send();
+  }
+});
+
+// find liked tweets by me
+router.get("/likes/me", auth, async (req, res) => {
+  try {
+    const tweets = await Tweet.find();
+    let likes = [];
+    if (!tweets) return res.status(404).send("No Tweets Made!");
+
+    tweets.map((tweet) => {
+      if (tweet.likes.length > 0) {
+        // console.log("tweets", tweet);
+        tweet.likes.forEach((like) => {
+          // console.log(like.owner.toString() === req.user._id.toString());
+
+          like.owner.toString() === req.user._id.toString()
+            ? likes.push(tweet)
+            : null;
+
+          // console.log(likes);
+        });
+      }
+    });
+    res.send(likes);
+  } catch (err) {
     res.status(500).send();
   }
 });
@@ -180,13 +239,6 @@ router.patch("/retweet/:id", auth, async (req, res) => {
       return res.status(404).send("Tweet Not Found");
     }
 
-    // Populate tweets to current user
-    await req.user.populate("tweets").execPopulate();
-    let tweets = req.user.tweets;
-    console.log(tweet);
-    tweets.unshift(tweet);
-    console.log("Tweets", tweets);
-
     if (
       tweet.retweets.filter(
         (retweet) => retweet.owner.toString() === req.user._id.toString()
@@ -194,9 +246,12 @@ router.patch("/retweet/:id", auth, async (req, res) => {
     ) {
       return res.status(400).send("Tweet already Shared!");
     }
-
+    console.log(1);
     tweet.retweets.push({ owner: req.user._id });
+    console.log(2);
     await tweet.save();
+    console.log(3, req.user._id, typeof req.user._id.toString());
+
     res.send(tweet.retweets);
   } catch (err) {
     res.status(500).send("Error! Couldn't Perform the task!");
