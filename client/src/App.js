@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 
 // Routes
 import PrivateRoute from "./component/routing/PrivateRoute";
@@ -22,7 +22,7 @@ import Setting from "./component/profile/Setting";
 // Redux
 import store from "./Redux/store";
 import { loadUser } from "./Redux/actions/auth";
-import { getAllTweets } from "./Redux/actions/tweet";
+import { getAllTweets, getTweetsByMe } from "./Redux/actions/tweet";
 
 // utils
 import setAuthToken from "./utils/setAuthToken";
@@ -35,6 +35,7 @@ function App() {
   useEffect(() => {
     store.dispatch(loadUser());
     store.dispatch(getAllTweets());
+    store.dispatch(getTweetsByMe());
   }, []);
 
   // console.log(moment(moment() + 36e5 * 5).twitter());
