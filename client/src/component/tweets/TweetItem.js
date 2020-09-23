@@ -16,7 +16,8 @@ import RepeatIcon from "@material-ui/icons/Repeat";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
 import CommentIcon from "@material-ui/icons/Comment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@material-ui/icons/Close";
+import EditIcon from "@material-ui/icons/Edit";
 import { useSelector, useDispatch } from "react-redux";
 import { RingLoader } from "react-spinners";
 import profilePic from "../../img/raga.jpg";
@@ -51,11 +52,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10
     // maxWidth: "100%",
   },
+  nameHandleParent: {
+    width: "auto"
+  },
   username: {
     fontWeight: "700"
   },
   handle: {
     // fontWeight: "100"
+  },
+  right: {
+    marginLeft: "auto"
   },
   like: {
     color: "#fa1616",
@@ -98,7 +105,9 @@ const TweetItem = ({ tweet }) => {
 
   const classes = useStyles();
   const loading = useSelector((state) => state.tweet.loading);
-  // const authUser = useSelector((state) => state.auth.user);
+  const authLoading = useSelector((state) => state.auth.loading);
+  const auth = useSelector((state) => state.auth.user);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const comments = tweet.comments;
   const user = tweet.owner;
 
@@ -137,6 +146,9 @@ const TweetItem = ({ tweet }) => {
     commentToggle ? setCommentToggle(false) : setCommentToggle(true);
   };
 
+  if (auth !== null) console.log(auth.username);
+  // console.log(user.username);
+
   return (
     <Fragment>
       <Paper elevation={3} className={classes.paper}>
@@ -160,16 +172,27 @@ const TweetItem = ({ tweet }) => {
               />
               <Grid container item direction='column'>
                 <Grid container item spacing={1}>
-                  <Grid item>
-                    <Typography variant='h5' className={classes.username}>
-                      {user.username}
-                    </Typography>
+                  <Grid
+                    container
+                    item
+                    direction='column'
+                    justify='center'
+                    alignItems='flex-start'
+                    className={classes.nameHandleParent}>
+                    <Grid item>
+                      <Typography variant='h5' className={classes.username}>
+                        {user.username}
+                      </Typography>
+                    </Grid>
+                    <Grid item className={classes.marginTop}>
+                      <Typography variant='body1' className={classes.handle}>
+                        @{user.handle}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item className={classes.marginTop}>
-                    <Typography variant='body1' className={classes.handle}>
-                      @{user.handle}
-                    </Typography>
-                  </Grid>
+                  {/* <Grid item>
+                    <Dot />
+                  </Grid> */}
                   <Grid item className={classes.marginTop}>
                     <Typography variant='caption'>
                       {parseDate(tweet.createdAt)}
@@ -182,6 +205,21 @@ const TweetItem = ({ tweet }) => {
                       </IconButton>
                     </Tooltip>
                   </Grid> */}
+
+                  <Grid item className={classes.right}>
+                    {!!auth &&
+                    isAuthenticated &&
+                    auth.username === user.username ? (
+                      <Grid container item justify='space-evenly'>
+                        <IconButton>
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton>
+                          <CloseIcon />
+                        </IconButton>
+                      </Grid>
+                    ) : null}
+                  </Grid>
                 </Grid>
                 <Divider />
                 <Grid item className={classes.tweet}>
