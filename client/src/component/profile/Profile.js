@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Grid, Avatar, makeStyles, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { PacmanLoader } from "react-spinners";
-import profilePic from "../../img/raga.jpg";
 import { useHistory } from "react-router-dom";
 import { getFollowers, getFollowing } from "../../Redux/actions/profile";
 
