@@ -20,7 +20,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { useSelector, useDispatch } from "react-redux";
 import { RingLoader } from "react-spinners";
-import profilePic from "../../img/raga.jpg";
 import {
   addLike,
   removeLike,
@@ -63,6 +62,12 @@ const useStyles = makeStyles((theme) => ({
   },
   right: {
     marginLeft: "auto"
+  },
+  edit: {
+    color: "#28df99"
+  },
+  delete: {
+    color: "#ff4b5c"
   },
   like: {
     color: "#fa1616",
@@ -211,10 +216,10 @@ const TweetItem = ({ tweet }) => {
                     isAuthenticated &&
                     auth.username === user.username ? (
                       <Grid container item justify='space-evenly'>
-                        <IconButton>
+                        <IconButton className={classes.edit}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton>
+                        <IconButton className={classes.delete}>
                           <CloseIcon />
                         </IconButton>
                       </Grid>
