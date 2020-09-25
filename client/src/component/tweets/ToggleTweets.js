@@ -26,7 +26,7 @@ function TabPanel(props) {
       aria-labelledby={`scrollable-prevent-tab-${index}`}
       {...other}>
       {value === index && (
-        <Box p={3}>
+        <Box p={0}>
           <Typography>{children}</Typography>
         </Box>
       )}
