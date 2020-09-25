@@ -12,11 +12,11 @@ import {
 import Tweets from "../tweets/Tweets";
 import ToggleTweets from "../tweets/ToggleTweets";
 
-const style = (theme) => ({
+const style = {
   Grid: {
     marginTop: 10
   }
-});
+};
 
 const ProfileContainer = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const ProfileContainer = () => {
   return (
     <Grid
       container
-      spacing={2}
+      // spacing={2}
       style={style.Grid}
       justify='center'
       alignItems='center'>
@@ -48,9 +48,9 @@ const ProfileContainer = () => {
         sm={8}
         md={5}
         direction='column'
-        justify='center'
-        alignItems='center'
-        spacing={4}>
+        // justify='center'
+        // alignItems='center'
+        spacing={2}>
         <Profile />
 
         <Grid container item justify='center'>
