@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   GET_TWEETS,
   POST_TWEET,
+  EDIT_TWEET,
   GET_MY_TWEETS,
   GET_MY_RETWEETS,
   GET_MY_LIKES,
@@ -101,6 +102,27 @@ export const postTweet = (tweet) => async (dispatch) => {
     const res = await axios.post("/api/tweet", body, config);
     dispatch({ type: POST_TWEET, payload: res.data });
     // dispatch(getAllTweets());
+  } catch (err) {
+    dispatch({ type: TWEET_ERROR });
+  }
+};
+
+// Edit Tweet
+export const editTweet = (id, text) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
+  const body = JSON.stringify({ text });
+
+  try {
+    console.log(1);
+    const res = await axios.patch(`/api/tweet/${id}`, body, config);
+    console.log(2);
+    dispatch({ type: EDIT_TWEET, payload: res.data });
+    console.log(3);
   } catch (err) {
     dispatch({ type: TWEET_ERROR });
   }
