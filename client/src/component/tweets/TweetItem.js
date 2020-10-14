@@ -25,7 +25,8 @@ import {
   removeLike,
   reTweet,
   deTweet,
-  getComments
+  getComments,
+  deleteTweet
 } from "../../Redux/actions/tweet";
 import Comment from "../comments/Comment";
 import PostComment from "../comments/PostComment";
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#12cad619"
   },
   paper: {
-    maringTop: 10,
+    marginTop: 10,
     marginBottom: 10,
     width: "100%",
     maxWidth: "100%",
@@ -216,10 +217,13 @@ const TweetItem = ({ tweet }) => {
                     isAuthenticated &&
                     auth.username === user.username ? (
                       <Grid container item justify='space-evenly'>
-                        <IconButton className={classes.edit}>
+                        <IconButton aria-label='edit' className={classes.edit}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton className={classes.delete}>
+                        <IconButton
+                          aria-label='delete'
+                          className={classes.delete}
+                          onClick={() => dispatch(deleteTweet(tweet._id))}>
                           <CloseIcon />
                         </IconButton>
                       </Grid>
