@@ -13,6 +13,7 @@ export const GET_MY_RETWEETS = "GET_MY_RETWEETS";
 export const GET_MY_LIKES = "GET_MY_LIKES";
 export const GET_TWEETS_BY_USER = "GET_TWEETS_BY_USER";
 export const POST_TWEET = "POST_TWEET";
+export const EDIT_TWEET = "EDIT_TWEET";
 export const DELETE_TWEET = "DELETE_TWEET";
 export const CLEAR_TWEET = "CLEAR_TWEET";
 export const CLEAR_TWEETS = "CLEAR_TWEETS";
