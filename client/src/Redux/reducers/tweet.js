@@ -3,6 +3,7 @@ import {
   CLEAR_TWEET,
   CLEAR_TWEETS,
   POST_TWEET,
+  EDIT_TWEET,
   DELETE_TWEET,
   UPDATE_LIKES,
   RETWEET,
@@ -24,6 +25,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
+  console.log(type, payload);
   switch (type) {
     case GET_TWEETS:
     case GET_MY_TWEETS:
@@ -57,6 +59,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         tweets: [payload, ...state.tweets],
+        loading: false
+      };
+
+    case EDIT_TWEET:
+      console.log("Edit");
+      return {
+        ...state,
+        tweets: state.tweets.map((tweet) =>
+          tweet._id === payload._id ? payload : tweet
+        ),
         loading: false
       };
 
