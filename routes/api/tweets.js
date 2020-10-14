@@ -188,7 +188,49 @@ router.get("/tweet/:id", auth, async (req, res) => {
     }
     res.send(tweet);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send("Server Err0r");
+  }
+});
+
+// Edit a Tweet
+router.patch("/tweet/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  const text = req.body.text;
+
+  try {
+    console.log(1);
+    const tweet = await Tweet.findOne({ _id });
+    console.log(2);
+    if (!tweet) {
+      res.status(404).send("Can't find Tweet!");
+    }
+    console.log(3);
+    tweet.text = text;
+    console.log(4);
+    // Promise.all(
+    //   await tweet
+    //   .populate("owner")
+    //   .populate("comments.user")
+    //   .populate("retweets.owner")
+    //   .execPopulate();
+    // await tweet.save();
+    // return tweet;
+    // )
+    //   .then((result) => {
+    //     console.log(result);
+    //     res.send(result);
+    //   })
+    //   .catch((err) => console.log(err));
+    console.log(5);
+    await tweet.populate("owner").populate("comments.user").execPopulate();
+    console.log(6, tweet);
+    await tweet.save();
+    console.log(7);
+    console.log(tweet);
+    console.log(8);
+    res.send(tweet);
+  } catch (e) {
+    res.status(500).send("Server Error");
   }
 });
 
