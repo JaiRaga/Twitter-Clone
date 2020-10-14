@@ -8,7 +8,7 @@ import {
   Paper,
   Typography,
   Button,
-  Tooltip
+  TextField
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -26,7 +26,8 @@ import {
   reTweet,
   deTweet,
   getComments,
-  deleteTweet
+  deleteTweet,
+  editTweet
 } from "../../Redux/actions/tweet";
 import Comment from "../comments/Comment";
 import PostComment from "../comments/PostComment";
@@ -117,11 +118,22 @@ const TweetItem = ({ tweet }) => {
   const comments = tweet.comments;
   const user = tweet.owner;
 
+  const [text, setText] = useState(tweet.text);
   const [liked, setLiked] = useState(!!tweet.likes.length);
   const [retweet, setRetweet] = useState(!!tweet.retweets.length);
   const [comment, setComment] = useState(false);
   const [commentToggle, setCommentToggle] = useState(false);
-  const [title, setTitle] = useState("Edit");
+  const [edit, setEdit] = useState(false);
+
+  const onChange = (e) => {
+    setText(e.target.value);
+    console.log(text);
+  };
+
+  const updateTweet = () => {
+    dispatch(editTweet(tweet._id, text));
+    setEdit(false);
+  };
 
   const setLike = (id) => {
     let likes = tweet.likes.map((like) => like._id === id);
@@ -217,7 +229,10 @@ const TweetItem = ({ tweet }) => {
                     isAuthenticated &&
                     auth.username === user.username ? (
                       <Grid container item justify='space-evenly'>
-                        <IconButton aria-label='edit' className={classes.edit}>
+                        <IconButton
+                          aria-label='edit'
+                          className={classes.edit}
+                          onClick={() => setEdit(true)}>
                           <EditIcon />
                         </IconButton>
                         <IconButton
@@ -232,7 +247,23 @@ const TweetItem = ({ tweet }) => {
                 </Grid>
                 <Divider />
                 <Grid item className={classes.tweet}>
-                  {tweet.text}
+                  {!edit ? (
+                    tweet.text
+                  ) : (
+                    <Grid container item direction='column'>
+                      <TextField
+                        id='filled-basic'
+                        label='Edit Tweet'
+                        name='text'
+                        value={text}
+                        variant='filled'
+                        onChange={onChange}
+                      />
+                      <Button color='secondary' onClick={updateTweet}>
+                        Update Tweet
+                      </Button>
+                    </Grid>
+                  )}
                 </Grid>
                 <Grid
                   container
