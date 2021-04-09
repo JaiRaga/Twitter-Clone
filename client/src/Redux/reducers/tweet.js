@@ -92,6 +92,8 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				tweets: [],
+				retweets: [],
+				likes: [],
 				loading: true,
 			}
 
