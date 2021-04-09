@@ -1,9 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Avatar, makeStyles, Button } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { PacmanLoader } from 'react-spinners'
 import { useHistory } from 'react-router-dom'
-import { getFollowers, getFollowing } from '../../Redux/actions/profile'
+import {
+	fetchProfileById,
+	followUser,
+	getFollowers,
+	getFollowing,
+	unFollowUser,
+} from '../../Redux/actions/profile'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -45,21 +51,44 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Profile = ({ user: Profile }) => {
-	const classes = useStyles()
-	const loading = useSelector((state) => state.auth.loading)
-	let userProfile = useSelector((state) => state.auth.user)
-	const isAuth = useSelector((state) => state.auth)
+const Profile = ({ user: profile }) => {
 	const history = useHistory()
 	const dispatch = useDispatch()
-	let user = null
+	const classes = useStyles()
 
-	user = Profile ? Profile : userProfile
+	const loading = useSelector((state) => state.auth.loading)
+	const userProfile = useSelector((state) => state.auth.user)
+	let following = useSelector((state) => state.profile.following)
+	let followers = useSelector((state) => state.profile.followers)
+	let followingCount = following.length
+	let followersCount = followers.length
+	console.log(following)
+	let user = profile ? profile : userProfile
+	// user = profile ? profile : userProfile
+
+	// To check weather Edit btn or follow btn is to be displayed.
+	const isAuth = profile ? profile._id === userProfile._id : true
+	// console.log(profile, userProfile)
+
+	// To Implement follow and unfollow msg on btns
+	let isFollowing = false
+	following = following.filter((userData) => userData._id === user._id)
+	console.log(following)
+	if (following.length > 0) isFollowing = true
 
 	useEffect(() => {
 		dispatch(getFollowers())
 		dispatch(getFollowing())
 	}, [])
+
+	const handleFollow = () => {
+		isFollowing
+			? dispatch(unFollowUser(user._id))
+			: dispatch(followUser(user._id))
+		isFollowing = !isFollowing
+
+		// dispatch(fetchProfileById(profile._id))
+	}
 
 	return (
 		<Grid container item>
@@ -104,7 +133,15 @@ const Profile = ({ user: Profile }) => {
 								onClick={() => history.push('/setting')}>
 								Edit Profile
 							</Button>
-						) : null}
+						) : (
+							<Button
+								variant='contained'
+								color='primary'
+								fullWidth
+								onClick={handleFollow}>
+								{isFollowing ? 'UnFollow' : 'Follow'}
+							</Button>
+						)}
 					</Grid>
 					<Grid container direction='column' alignItems='center'>
 						<Grid className={classes.padding} item>
@@ -115,7 +152,7 @@ const Profile = ({ user: Profile }) => {
 							justify='space-evenly'
 							className={classes.follow}
 							item>
-							{user.following.length}
+							{!profile ? followingCount : user.following.length}
 							<Button
 								color='primary'
 								fullWidth
@@ -123,7 +160,7 @@ const Profile = ({ user: Profile }) => {
 								Following
 							</Button>
 
-							{user.followers.length}
+							{!profile ? followersCount : user.followers.length}
 							<Button
 								color='primary'
 								fullWidth
