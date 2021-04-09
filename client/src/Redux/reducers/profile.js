@@ -6,6 +6,7 @@ import {
 	GET_FOLLOWING,
 	UPDATE_FOLLOWING,
 	GET_USERS,
+	SET_PROFILE,
 } from '../actions/types'
 
 const initialState = {
@@ -25,6 +26,13 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				people: [...payload],
+				loading: false,
+			}
+
+		case SET_PROFILE:
+			return {
+				...state,
+				profile: payload,
 				loading: false,
 			}
 
