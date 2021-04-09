@@ -23,7 +23,7 @@ const People = () => {
 	return (
 		<Grid container direction='column' justify='flex-start' alignItems='center'>
 			{users.map((user) => (
-				<Grid item className={classes.margin}>
+				<Grid item key={user._id} className={classes.margin}>
 					<PeopleItem user={user} />
 				</Grid>
 			))}
