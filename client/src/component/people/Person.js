@@ -2,12 +2,14 @@ import React, { Fragment, useEffect } from 'react'
 import { Grid } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { CircleLoader } from 'react-spinners'
+import { useHistory } from 'react-router-dom'
 import Profile from '../profile/Profile'
 import {
 	getTweetsByMe,
 	clearTweets,
 	getRetweetsByMe,
 	getLikesByMe,
+	getAllTweets,
 } from '../../Redux/actions/tweet'
 import Tweets from '../tweets/Tweets'
 import ToggleTweets from '../tweets/ToggleTweets'
@@ -19,11 +21,18 @@ const style = {
 }
 
 const Person = () => {
+	const history = useHistory()
+	console.log('Person', history.location.pathname.slice(8))
+	const id = history.location.pathname.slice(8)
+
 	const dispatch = useDispatch()
+
 	useEffect(() => {
-		dispatch(getTweetsByMe())
-		dispatch(getRetweetsByMe())
-		dispatch(getLikesByMe())
+		// dispatch(getAllTweets())
+
+		// dispatch(getTweetsByMe())
+		// dispatch(getRetweetsByMe())
+		// dispatch(getLikesByMe())
 
 		return () => {
 			dispatch(clearTweets())
