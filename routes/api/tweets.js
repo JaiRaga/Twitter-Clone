@@ -102,16 +102,18 @@ router.get('/tweets/me', auth, async (req, res) => {
 })
 
 // find retwets by me
-router.get('/retweets/me', auth, async (req, res) => {
+router.get('/retweets/:id', auth, async (req, res) => {
 	try {
-		const tweets = await Tweet.find()
+		const id = req.params.id
+		const tweets = await Tweet.find({ owner: id })
+		console.log('///////////1111111', tweets, id)
 		let retweets = []
 		if (!tweets) return res.status(404).send('No Tweets Made!')
 
 		tweets.map((tweet) => {
 			if (tweet.retweets.length > 0) {
 				tweet.retweets.forEach((retweet) => {
-					if (retweet.owner.toString() === req.user._id.toString()) {
+					if (retweet.owner.toString() === id) {
 						retweets.push(tweet)
 					}
 				})
@@ -130,7 +132,7 @@ router.get('/retweets/me', auth, async (req, res) => {
 			})
 		)
 			.then((result) => {
-				console.log(result)
+				console.log('Result//////////', result)
 				res.send(result)
 			})
 			.catch((err) => console.log(err))
@@ -142,18 +144,17 @@ router.get('/retweets/me', auth, async (req, res) => {
 })
 
 // find liked tweets by me
-router.get('/likes/me', auth, async (req, res) => {
+router.get('/likes/:id', auth, async (req, res) => {
 	try {
-		const tweets = await Tweet.find()
+		const id = req.params.id
+		const tweets = await Tweet.find({ owner: id })
 		let likes = []
 		if (!tweets) return res.status(404).send('No Tweets Made!')
 
 		tweets.map((tweet) => {
 			if (tweet.likes.length > 0) {
 				tweet.likes.forEach((like) => {
-					like.owner.toString() === req.user._id.toString()
-						? likes.push(tweet)
-						: null
+					like.owner.toString() === id ? likes.push(tweet) : null
 				})
 			}
 		})
