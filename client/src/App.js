@@ -37,7 +37,7 @@ function App() {
 	useEffect(() => {
 		store.dispatch(loadUser())
 		store.dispatch(getAllTweets())
-		store.dispatch(getTweetsByMe())
+		// store.dispatch(getTweetsByMe())
 	}, [])
 
 	// console.log(moment(moment() + 36e5 * 5).twitter());
