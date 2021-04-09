@@ -2,6 +2,7 @@ import axios from 'axios'
 import {
 	GET_USERS,
 	GET_PROFILE,
+	SET_PROFILE,
 	AUTH_ERROR,
 	UPDATE_PROFILE,
 	PROFILE_ERROR,
@@ -9,6 +10,8 @@ import {
 	GET_FOLLOWING,
 	UPDATE_FOLLOWING,
 	FETCH_USERS_ERROR,
+	SET_PROFILE_ERROR,
+	GET_TWEETS_BY_USER,
 } from './types'
 
 // Get all users
@@ -18,6 +21,19 @@ export const getUsers = () => async (dispatch) => {
 		dispatch({ type: GET_USERS, payload: res.data })
 	} catch (err) {
 		dispatch({ type: FETCH_USERS_ERROR })
+	}
+}
+
+// Add Selected user profile to uni state
+export const setProfile = (data) => async (dispatch) => {
+	try {
+		dispatch({ type: SET_PROFILE, payload: data })
+
+		const res = await axios.get(`/api/tweets/${data._id}`)
+		console.log('Paramed tweet', res.data)
+		dispatch({ type: GET_TWEETS_BY_USER, payload: res.data })
+	} catch (err) {
+		dispatch({ type: SET_PROFILE_ERROR })
 	}
 }
 
