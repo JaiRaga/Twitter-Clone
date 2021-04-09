@@ -7,8 +7,8 @@ import Profile from '../profile/Profile'
 import {
 	getTweetsByMe,
 	clearTweets,
-	getRetweetsByMe,
-	getLikesByMe,
+	getRetweets,
+	getLikes,
 	getAllTweets,
 } from '../../Redux/actions/tweet'
 import Tweets from '../tweets/Tweets'
@@ -31,14 +31,16 @@ const Person = () => {
 		// dispatch(getAllTweets())
 
 		// dispatch(getTweetsByMe())
-		// dispatch(getRetweetsByMe())
-		// dispatch(getLikesByMe())
+		dispatch(getRetweets(id))
+		dispatch(getLikes(id))
 
 		return () => {
 			dispatch(clearTweets())
 			// dispatch(getAllTweets());
 		}
 	}, [])
+
+	const user = useSelector((state) => state.profile.profile)
 
 	const tweet = useSelector((state) => state.tweet)
 	const { loading, tweets } = tweet
@@ -60,7 +62,7 @@ const Person = () => {
 				// justify='center'
 				// alignItems='center'
 				spacing={2}>
-				<Profile />
+				<Profile user={user} />
 
 				<Grid container item justify='center'>
 					{loading || !tweets ? (
