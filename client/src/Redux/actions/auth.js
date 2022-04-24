@@ -53,7 +53,7 @@ export const registerUser = ({ username, handle, email, password }) => async (
     dispatch({ type: REGISTER_SUCCESS, payload: res.data });
     dispatch(loadUser());
   } catch (err) {
-    dispatch({ REGISTER_FAIL });
+    dispatch({ type: REGISTER_FAIL });
   }
 };
 
